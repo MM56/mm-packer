@@ -1,0 +1,18 @@
+{
+  "name": "mm-packer",
+  "version": "1.0.3",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "packer": "bin/packImages.py"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MM56/mm-packer.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
