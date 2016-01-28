@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "packer": "bin/packImages.py"
+    "packer": "cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,5 +14,10 @@
     "url": "git@github.com:MM56/mm-packer.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "files": [
+    "bin/packImages.py",
+    "cli.js",
+    "index.js"
+  ]
 }
