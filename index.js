@@ -3,7 +3,7 @@
 var path = require('path');
 var execFile = require('child_process').execFile;
 
-module.exports = function(srcPath, outputFolder, filename) {
+module.exports = function(srcPath, outputFolder, filename, cb) {
 	if(srcPath == null) {
 		throw new Error('Missing srcPath');
 		return;
@@ -25,5 +25,5 @@ module.exports = function(srcPath, outputFolder, filename) {
 		"-n", filename
 	];
 
-	execFile(cmd, args);
+	execFile(cmd, args, cb);
 };
