@@ -1,9 +1,9 @@
 'use strict';
 
 var path = require('path');
-var execFile = require('child_process').execFile;
+var execFile = require('child_process').execFileSync;
 
-module.exports = function(srcPath, outputFolder, filename, cb) {
+module.exports = function(srcPath, outputFolder, filename) {
 	if(srcPath == null) {
 		throw new Error('Missing srcPath');
 		return;
@@ -25,5 +25,5 @@ module.exports = function(srcPath, outputFolder, filename, cb) {
 		"-n", filename
 	];
 
-	execFile(cmd, args, cb);
+	execFile(cmd, args);
 };
