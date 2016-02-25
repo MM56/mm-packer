@@ -10,10 +10,10 @@ def listFiles(path):
 	files = os.listdir(path)
 	arr = []
 	for f in files:
-		if not f.startswith('.'):
-			arr.append([path + f, f])
 		if os.path.isdir(path + '/' + f):
 			arr.extend(listFiles(path + f + '/'))
+		if not os.path.isdir(path + '/' + f) and not f.startswith('.'):
+			arr.append(path + f)
 	return arr
 
 def replaceMimetype(originalMimetype):
@@ -26,23 +26,23 @@ def replaceMimetype(originalMimetype):
 	else:
 		return "text/plain"
 
-def packImages(files, dest, path, filename):
+def packit(files, dest, path, filename):
 
 	output = None
 	data = []
 	p = 0
 	c = 0
-	for fn in files:
-		f = open(fn[0], 'r').read()
+	for file in files:
+		f = open(file, 'r').read()
 		l = len(f)
 
 		if output == None: output = f
 		else: output = output + f
 
-		mimetype = mimetypes.guess_type(fn[0])
+		mimetype = mimetypes.guess_type(file)
 		mimetype = mimetype[0]
 		mimetype = replaceMimetype(mimetype)
-		data.append([fn[0][len(path):], p, p + l, mimetype])
+		data.append([file[len(path):], p, p + l, mimetype])
 
 		p += l
 		c += 1
@@ -74,7 +74,10 @@ def main():
 	if len(path) > 0 and path[-1] != '/': path = path + '/'
 	if len(dest) > 0 and dest[-1] != '/': dest = dest + '/'
 
-	packImages(listFiles(path), dest, path, filename)
+	files = listFiles(path)
+	print files
+
+	packit(files, dest, path, filename)
 
 
 if __name__ == "__main__":
