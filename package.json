@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "files": [
-    "bin/packImages.py",
+    "bin/packer.py",
     "cli.js",
     "index.js"
   ]

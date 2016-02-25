@@ -17,7 +17,7 @@ module.exports = function(srcPath, outputFolder, filename) {
 		return;
 	}
 
-	var cmd = path.join(__dirname, "bin", 'packImages.py');
+	var cmd = path.join(__dirname, "bin", 'packer.py');
 
 	var args = [
 		"-p", srcPath,
