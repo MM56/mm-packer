@@ -18,8 +18,16 @@ def listFiles(path):
 
 def replaceMimetype(originalMimetype):
 	validMimetypes = [
-		# images
-		"image/gif", "image/jpeg", "image/png", "image/tiff", "image/webp"
+		# Text
+		"text/plain"
+		# Images
+		"image/gif", "image/jpeg", "image/png", "image/tiff", "image/webp",
+		# JSON
+		"application/json",
+		# Twig
+		"text/twig",
+		# Others non text
+		"application/octet-stream"
 	]
 	if originalMimetype in validMimetypes:
 		return originalMimetype
@@ -52,6 +60,14 @@ def packit(files, dest, path, filename):
 
 def main():
 
+	# Don't forget to add type to validMimetypes
+	mimetypes.add_type("text/plain", ".txt")
+	mimetypes.add_type("text/plain", ".obj")
+	mimetypes.add_type("text/css", ".css")
+	mimetypes.add_type("text/twig", ".twig")
+	mimetypes.add_type("application/json", ".json")
+	mimetypes.add_type("application/octet-stream", ".dds")
+	mimetypes.add_type("application/octet-stream", ".pvr")
 	mimetypes.init()
 
 	path = dest = "."
@@ -75,10 +91,10 @@ def main():
 	if len(dest) > 0 and dest[-1] != '/': dest = dest + '/'
 
 	files = listFiles(path)
-	print files
 
 	packit(files, dest, path, filename)
 
+	print("Pack files generated in %s" % dest)
 
 if __name__ == "__main__":
 	main()

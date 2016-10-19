@@ -2,6 +2,8 @@
 
 var path = require('path');
 var execFile = require('child_process').execFileSync;
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
 
 module.exports = function(srcPath, outputFolder, filename) {
 	if(srcPath == null) {
@@ -24,6 +26,6 @@ module.exports = function(srcPath, outputFolder, filename) {
 		"-o", outputFolder,
 		"-n", filename
 	];
-
-	execFile(cmd, args);
+	
+	return decoder.write(execFile(cmd, args));
 };
