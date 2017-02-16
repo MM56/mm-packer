@@ -3,25 +3,36 @@ const fs = require('fs');
 const mime = require('mime-types');
 const path = require('path');
 
+let debug = false;
+
 function packer(options) {
 	if(!options.source) {
 		cli.error("No source parameter specified");
+		return;
+	}
+	if(!fs.existsSync(options.source)) {
+		cli.error("Source directory \"" + options.source + "\" doesn't exist");
 		return;
 	}
 	if(!options.output) {
 		cli.error("No output parameter specified");
 		return;
 	}
+	if(!fs.existsSync(options.output)) {
+		cli.error("Output directory \"" + options.output + "\" doesn't exist");
+		return;
+	}
 
-	let source = addTrailingSlash(options.source);
-	let output = addTrailingSlash(options.output);
-	let name = options.name;
-	cli.debug("Source: " + source);
-	cli.debug("Output: " + output);
-	cli.debug("Name: " + name);
+	const source = addTrailingSlash(options.source);
+	const output = addTrailingSlash(options.output);
+	const name = options.name || "pack";
+	debug = options.debug || false;
+	printDebug("Source: " + source);
+	printDebug("Output: " + output);
+	printDebug("Name: " + name);
 
 	const files = listFiles(source);
-	cli.debug(files);
+	// printDebug(files);
 
 	pack(files, source, output, name);
 }
@@ -34,7 +45,7 @@ function addTrailingSlash(str) {
 }
 
 function listFiles(dir, fileList = []) {
-	let files = fs.readdirSync(dir);
+	const files = fs.readdirSync(dir);
 	for(let i = 0, l = files.length; i < l; i++) {
 		const file = files[i];
 		const currentFile = dir + file;
@@ -48,21 +59,21 @@ function listFiles(dir, fileList = []) {
 }
 
 function pack(files, source, output, name) {
-	cli.debug("Packing:");
+	printDebug("Packing:");
 	const stream = fs.createWriteStream(output + name + ".pack");
 	const datas = [];
 	let p = 0;
 	for(let i = 0, l = files.length; i < l; i++) {
 		const file = files[i];
-		cli.debug(file);
+		printDebug(file);
 
-		let mimetype = resolveMimetype(file);
-		cli.debug("- Resolved mime-type: " + mimetype);
+		const mimetype = resolveMimetype(file);
+		printDebug("- Resolved mime-type: " + mimetype);
 
-		let size = fs.statSync(file)["size"];
-		cli.debug("- Size: " + size);
+		const size = fs.statSync(file)["size"];
+		printDebug("- Size: " + size);
 
-		let fileContent = fs.readFileSync(file);
+		const fileContent = fs.readFileSync(file);
 		stream.write(fileContent);
 
 		datas.push([file.replace(source, ""), p, p + size, mimetype]);
@@ -76,10 +87,10 @@ function pack(files, source, output, name) {
 function resolveMimetype(file) {
 	let mimetype = mime.lookup(file);
 	if(mimetype) {
-		cli.debug("- Detected mime-type: " + mimetype);
+		printDebug("- Detected mime-type: " + mimetype);
 		mimetype = validateMimetype(mimetype);
 	} else {
-		cli.debug("- Detected mime-type: None");
+		printDebug("- Detected mime-type: None");
 		const ext = path.extname(file);
 		switch(ext) {
 			case ".txt":
@@ -124,6 +135,12 @@ function validateMimetype(mimetype) {
 		return "text/plain";
 	} else {
 		return mimetype;
+	}
+}
+
+function printDebug(msg) {
+	if(debug) {
+		cli.debug(msg);
 	}
 }
 

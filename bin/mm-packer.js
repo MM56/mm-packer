@@ -16,6 +16,7 @@ cli.parse({
 
 cli.main((args, options) => {
 	if(options.source && options.output && options.name) {
+		options.debug = process.argv.indexOf("--debug") > -1;
 		packer(options);
 	} else {
 		cli.getUsage();
