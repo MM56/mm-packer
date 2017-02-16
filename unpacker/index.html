@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<script src="//cdnjs.cloudflare.com/ajax/libs/PreloadJS/0.4.1/preloadjs.min.js"></script>
+<script src='./Unpacker.js'></script>
+<script>
+
+
+var queue = new createjs.LoadQueue();
+queue.on("complete", handleComplete, this);
+queue.loadManifest([
+	{id: "image", src:"../files/packed/pack.pack", type: 'binary'},
+	{id: "config", src:"../files/packed/pack.json"},
+]);
+function handleComplete() {
+	var unpacker = new Unpacker(queue.getResult('image'), queue.getResult('config'));
+	document.getElementById("img").src = unpacker.getAsURI('knight.jpg');
+	console.log("----");
+	document.getElementById("svg").innerHTML = unpacker.getAsString('svg/pipe.svg');
+}
+</script>
+<style>
+img
+{
+	max-width: 200px;
+	max-height: 200px;
+}
+#container
+{
+	background-size: 100px 100px;
+}
+</style>
+</head>
+<body>
+	<div id="container">
+		<img id="img" />
+		<div id="svg"></div>
+	</div>
+</body>
+</html>

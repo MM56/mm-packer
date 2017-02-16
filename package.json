@@ -1,10 +1,10 @@
 {
   "name": "mm-packer",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "",
   "main": "index.js",
   "bin": {
-    "packer": "cli.js"
+    "mm-packer": "bin/mm-packer.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,11 +13,13 @@
     "type": "git",
     "url": "git@github.com:MM56/mm-packer.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "MM56",
   "files": [
-    "bin/packer.py",
-    "cli.js",
+    "bin/mm-packer.js",
     "index.js"
-  ]
+  ],
+  "dependencies": {
+    "cli": "^1.0.1",
+    "mime-types": "^2.1.14"
+  }
 }
