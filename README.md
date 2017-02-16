@@ -48,7 +48,8 @@ const packer = require("mm-packer");
 const packerOptions = {
 	source: "files/original",
 	output: "files/packed",
-	name: "pack" // Optional
+	name: "pack" // Optional,
+	debug: true // Optional
 };
 packer(packerOptions);
 ```
