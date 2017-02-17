@@ -60,7 +60,7 @@ function listFiles(dir, fileList = []) {
 
 function pack(files, source, output, name) {
 	printDebug("Packing:");
-	const stream = fs.createWriteStream(output + name + ".pack");
+	const buffers = [];
 	const datas = [];
 	let p = 0;
 	for(let i = 0, l = files.length; i < l; i++) {
@@ -74,13 +74,13 @@ function pack(files, source, output, name) {
 		printDebug("- Size: " + size);
 
 		const fileContent = fs.readFileSync(file);
-		stream.write(fileContent);
+		buffers.push(fileContent);
 
 		datas.push([file.replace(source, ""), p, p + size, mimetype]);
 
 		p += size;
 	}
-	stream.end();
+	fs.writeFileSync(output + name + ".pack", Buffer.concat(buffers));
 	fs.writeFileSync(output + name + ".json", JSON.stringify(datas));
 }
 
