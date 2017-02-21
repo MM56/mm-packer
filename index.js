@@ -27,6 +27,7 @@ function packer(options) {
 	const output = addTrailingSlash(options.output);
 	const name = options.name || "pack";
 	debug = options.debug || false;
+	options.mimeTypes = options.mimeTypes || [];
 	printDebug("Source: " + source);
 	printDebug("Output: " + output);
 	printDebug("Name: " + name);
@@ -34,7 +35,7 @@ function packer(options) {
 	const files = listFiles(source);
 	// printDebug(files);
 
-	pack(files, source, output, name);
+	pack(files, source, output, name, options.mimeTypes);
 }
 
 function addTrailingSlash(str) {
@@ -58,7 +59,7 @@ function listFiles(dir, fileList = []) {
 	return fileList;
 }
 
-function pack(files, source, output, name) {
+function pack(files, source, output, name, mimeTypes) {
 	printDebug("Packing:");
 	const buffers = [];
 	const datas = [];
@@ -67,7 +68,7 @@ function pack(files, source, output, name) {
 		const file = files[i];
 		printDebug(file);
 
-		const mimetype = resolveMimetype(file);
+		const mimetype = resolveMimetype(file, mimeTypes);
 		printDebug("- Resolved mime-type: " + mimetype);
 
 		const size = fs.statSync(file)["size"];
@@ -84,11 +85,11 @@ function pack(files, source, output, name) {
 	fs.writeFileSync(output + name + ".json", JSON.stringify(datas));
 }
 
-function resolveMimetype(file) {
+function resolveMimetype(file, mimeTypes) {
 	let mimetype = mime.lookup(file);
 	if(mimetype) {
 		printDebug("- Detected mime-type: " + mimetype);
-		mimetype = validateMimetype(mimetype);
+		mimetype = validateMimetype(mimetype, mimeTypes);
 	} else {
 		printDebug("- Detected mime-type: None");
 		const ext = path.extname(file);
@@ -118,8 +119,8 @@ function resolveMimetype(file) {
 	return mimetype;
 }
 
-function validateMimetype(mimetype) {
-	const validMimetypes = [
+function validateMimetype(mimetype, mimeTypes) {
+	const validMimetypes = mimeTypes.concat([
 		// Text
 		"text/plain",
 		// Images
@@ -130,7 +131,7 @@ function validateMimetype(mimetype) {
 		"text/twig",
 		// Others non text
 		"application/octet-stream"
-	];
+	]);
 	if(validMimetypes.indexOf(mimetype) == -1) {
 		return "text/plain";
 	} else {
