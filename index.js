@@ -109,6 +109,7 @@ function resolveMimetype(file, mimeTypes) {
 				break;
 			case ".dds":
 			case ".pvr":
+			case ".glb":
 				mimetype = "application/octet-stream";
 				break;
 			default:
